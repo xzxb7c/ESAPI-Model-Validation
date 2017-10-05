@@ -31,8 +31,8 @@
             </ScrollViewer>
         </Border>
         <TextBlock Text="Plan:" Margin="454,103,236,437" FontSize="18" FontWeight="Bold" TextAlignment="Right"/>
-        <ComboBox x:Name="plan_cmb" Margin="576,102,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button x:Name="analyze_btn" Width="150" Height="30" Margin="576,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="analyze_btn_Click" Content="Analyze Data"/>
+        <ComboBox Name="plan_cmb" Margin="576,102,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Name="analyze_btn" Width="150" Height="30" Margin="576,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="analyze_btn_Click" Content="Analyze Data"/>
         <TextBlock Text="Analysis Results" Margin="10,316,591,219" FontSize="18" FontWeight="Bold"/>
 
 
