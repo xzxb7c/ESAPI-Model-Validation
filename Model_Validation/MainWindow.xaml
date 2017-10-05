@@ -1,0 +1,31 @@
+﻿<Window x:Class="Model_Validation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Model_Validation"
+        mc:Ignorable="d"
+        Title="Compare Beam Data" Height="600" Width="800"
+        Closing="Window_Closing">
+    <Grid>
+        <TextBlock Text="Calculated Verification Data" Margin="10,10,0,0" FontSize="24" FontWeight="Bold"></TextBlock>
+        <TextBlock Text="Patient ID:" Margin="10,40,0,0" FontSize="18" FontWeight="Bold"></TextBlock>
+        <TextBox Name="patId_txt" Width="150" Height="30" Margin="110,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
+        <Button Name="patLoad_btn" Width="150" Height="30" Margin="280,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="patLoad_btn_Click" Content="Load Patient"></Button>
+        <TextBlock Text="Course:" Margin="40,80,0,0" FontSize="18" FontWeight="Bold"></TextBlock>
+        <ComboBox Name="course_cmb" Margin="120,80,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="course_cmb_SelectionChanged"></ComboBox>
+        <TextBlock Text="Measured Scans" Margin="10,120,0,0" FontSize="24" FontWeight="Bold"></TextBlock>
+        <Button Name="getScan_btn" Width="150" Height="30" Margin="10,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="getScan_btn_Click" Content="Find W2CAD Scan"></Button>
+        <Border BorderBrush="Black" BorderThickness="2" Height="200" Width="400" Margin="180,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ScrollViewer Margin="0,0,0,0">
+                <StackPanel Name="prevScans_sp" Margin="10" HorizontalAlignment="Left"  VerticalAlignment="Top">
+                    
+                </StackPanel>
+            </ScrollViewer> 
+            
+        </Border>
+        
+        
+        
+    </Grid>
+</Window>
