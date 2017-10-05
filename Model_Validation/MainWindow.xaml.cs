@@ -64,6 +64,7 @@ namespace Model_Validation
 
         private void course_cmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            
 
         }
 
@@ -156,6 +157,11 @@ namespace Model_Validation
             {
                 scan_data = new List<Tuple<double, double>>();
             }
+        }
+
+        private void analyze_btn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
