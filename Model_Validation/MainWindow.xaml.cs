@@ -56,10 +56,17 @@ namespace Model_Validation
                 }
                 if (pat != null)
                 {
+                    course_cmb.IsEnabled = true;
+
+                    plan_cmb.IsEnabled = true;
+
                     foreach (Course c in pat.Courses)
                     {
+
                         course_cmb.Items.Add(c.Id);
                     }
+                    course_cmb.SelectedIndex = 0;
+
                 }
                 else { MessageBox.Show("Patient ID is Incorrect"); }
             }
@@ -68,10 +75,12 @@ namespace Model_Validation
         private void course_cmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             course = pat.Courses.First(x => x.Id == course_cmb.SelectedItem.ToString());
+
             foreach (PlanSetup ps in course.PlanSetups)
             {
                 plan_cmb.Items.Add(ps.Id);
             }
+            plan_cmb.SelectedIndex = 0;
         }
 
         private void getScan_btn_Click(object sender, RoutedEventArgs e)
@@ -82,6 +91,7 @@ namespace Model_Validation
             fdlg.Filter = "Ascii Files (*.asc)|*.asc|Text Files (*.txt)|*.txt|W2CAD Files (*.cdp)|*.cdp";
             if (fdlg.ShowDialog() == true)
             {
+                analyze_btn.IsEnabled = true;
                 //read out the content here
                 foreach (string line in File.ReadAllLines(fdlg.FileName))
                 {
@@ -180,17 +190,27 @@ namespace Model_Validation
                     plan = course.PlanSetups.First(x => x.Id == plan_cmb.SelectedItem.ToString());
                 }
 
+                int success_cnt = 0;
+                Label albl = new Label();
+                albl.Content = "";
+
+                double match = 0;
+
+                List<double> gammas = new List<double>();
+
                 foreach (DataScan ds in ds_list)
                 {
                     string s_output = "";
                     Beam b_keep = null;
                     foreach (Beam b in plan.Beams)
                     {
+
                         double x1 = b.ControlPoints.First().JawPositions.X1;
                         double x2 = b.ControlPoints.First().JawPositions.X2;
                         double y1 = b.ControlPoints.First().JawPositions.Y1;
                         double y2 = b.ControlPoints.First().JawPositions.Y2;
 
+                        //match field size with scan data
                         if (x2 - x1 == ds.FieldX && y2 - y1 == ds.FieldY)
                         {
                             b_keep = b;
@@ -198,9 +218,21 @@ namespace Model_Validation
                         }
 
                     }
-                    if (b_keep == null) { s_output = "No Scan"; }
+
+
+                    if (b_keep == null)
+                    {
+                        s_output = "No Scan";
+                        if (match != ds.FieldX)
+                        {
+                            albl.Content += String.Format("{0} x {1} Field does not exist in plan\n", ds.FieldX, ds.FieldY);
+                        }
+                        match = ds.FieldX;
+
+                    }
                     else
                     {
+                        gammas.Clear();
                         //getting the dose profile
                         VVector start = new VVector();
                         start.x = ds.axisDir == "X" ? ds.scan_data.First().Item1 : 0;
@@ -220,11 +252,12 @@ namespace Model_Validation
                             "\\Scan" + ds.FieldX.ToString() + "x" + ds.FieldY.ToString() + "_" + ds.depth.ToString() + ".csv"))
                         {
                             sw.WriteLine("Scan Pos, Scan Dose, Calc pos, Calc Dose, Gamma");
+
                             foreach (Tuple<double, double> tdd in ds.scan_data)
                             {
                                 string calc_pos = "";
                                 string calc_dos = "";
-                                string gamma = "";
+
 
                                 IEnumerable<ProfilePoint> pp_check = ds.axisDir == "X" ?
                                     dp.Where(x => x.Position.x >= tdd.Item1) :
@@ -241,20 +274,38 @@ namespace Model_Validation
 
                                 double gam = Get_Gamma(dp, tdd.Item1, tdd.Item2, Convert.ToDouble(calc_pos), Convert.ToDouble(calc_dos), pp, ds.axisDir, norm_factor);
                                 sw.WriteLine(String.Format("{0}, {1}, {2}, {3}, {4}", tdd.Item1, tdd.Item2, calc_pos, calc_dos, gam));
+                                gammas.Add(gam);
+
                             }
                             sw.Flush();
                             s_output = "Success";
+                            ++success_cnt;
+                            albl.Content += String.Format("Field Size: {0}\tDepth: {1}\tMean Gamma {2:0.00}\tMax Gamma {3:0.00}\n", ds.FieldX, ds.depth, gammas.Average(), gammas.Max());
+
                         }
                     }
+
                     Label lbl = new Label();
                     string scan_type = ds.axisDir == "X" ? "Profile" : "PDD";
                     string depth_type = ds.axisDir == "X" ? ds.depth.ToString() : "NA";
 
                     lbl.Content = String.Format("{0} - FLSZ ({1} x {2}) - Depth ({3})", scan_type, ds.FieldX, ds.FieldY, depth_type);
-                    lbl.Background = s_output == "Success" ? Brushes.LightGreen : Brushes.Pink;
+                    if (s_output == "Success")
+                    {
+                        lbl.Background = Brushes.LightGreen;
+                    }
+                    else
+                    {
+                        lbl.Background = Brushes.Pink;
+                    }
                     prevScans_sp.Children.Add(lbl);
+
+
                 }
+                albl.Content += String.Format("{0} W2CAD Scans Loaded\n{1} Calculated Beams Compared", ds_list.Count.ToString(), success_cnt.ToString());
+                analyze_sp.Children.Add(albl);
             }
+
 
         }
         private double Get_Gamma(DoseProfile dp, double item1, double item2, double v1, double v2, ProfilePoint pp, string axisDir, double norm_factor)
@@ -267,7 +318,7 @@ namespace Model_Validation
             int start = loc - 10 * dta < 0 ? 0 : loc - Convert.ToInt16(10 * dta);
             int end = loc + 10 * dta > dp.Count() ? dp.Count() : loc + Convert.ToInt16(10 * dta);
 
-            for (double i = start; i < end -1; i += 0.1)
+            for (double i = start; i < end - 1; i += 0.1)
             {
                 int r0 = (int)Math.Floor(i);
                 int r1 = (int)Math.Ceiling(i);
@@ -288,7 +339,7 @@ namespace Model_Validation
                     pos = x0 + (i - r0) * (x1 - x0) / (r1 - r0);
                     dos = y0 + (i - r0) * (y1 - y0) / (r1 - r0);
                 }
-                double gamma = Math.Sqrt(Math.Pow((pos - item1) / dta, 2) + Math.Pow((dos/norm_factor*100 - item2) / dd, 2));
+                double gamma = Math.Sqrt(Math.Pow((pos - item1) / dta, 2) + Math.Pow((dos / norm_factor * 100 - item2) / dd, 2));
                 gamma_values.Add(gamma);
 
             }
@@ -296,4 +347,5 @@ namespace Model_Validation
         }
 
     }
+
 }

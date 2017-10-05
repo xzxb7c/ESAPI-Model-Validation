@@ -13,7 +13,7 @@
         <TextBox Name="patId_txt" Width="150" Height="30" Margin="120,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
         <Button Name="patLoad_btn" Width="150" Height="30" Margin="290,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="patLoad_btn_Click" Content="Load Patient"></Button>
         <TextBlock Text="Course:" Margin="454,50,236,488" FontSize="18" FontWeight="Bold" TextAlignment="Right"></TextBlock>
-        <ComboBox Name="course_cmb" Margin="576,50,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="course_cmb_SelectionChanged"></ComboBox>
+        <ComboBox Name="course_cmb" Margin="576,50,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="course_cmb_SelectionChanged" IsEnabled="False"></ComboBox>
         <TextBlock Text="Measured Scans" Margin="12,86,589,449" FontSize="18" FontWeight="Bold"></TextBlock>
         <Button Name="getScan_btn" Width="150" Height="30" Margin="576,159,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="getScan_btn_Click" Content="Find W2CAD Scan"></Button>
         <Border BorderBrush="Black" BorderThickness="2" Height="180" Width="450" Margin="10,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -23,7 +23,7 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="Black" BorderThickness="2" Height="180" Width="450" Margin="10,350,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Border BorderBrush="Black" BorderThickness="2" Height="180" Width="600" Margin="10,350,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <ScrollViewer Margin="0,0,0,0">
                 <StackPanel Name="analyze_sp" Margin="10" HorizontalAlignment="Left"  VerticalAlignment="Top">
 
@@ -31,8 +31,8 @@
             </ScrollViewer>
         </Border>
         <TextBlock Text="Plan:" Margin="454,103,236,437" FontSize="18" FontWeight="Bold" TextAlignment="Right"/>
-        <ComboBox Name="plan_cmb" Margin="576,102,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Name="analyze_btn" Width="150" Height="30" Margin="576,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="analyze_btn_Click" Content="Analyze Data"/>
+        <ComboBox Name="plan_cmb" Margin="576,102,0,0" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" IsEnabled="False"/>
+        <Button Name="analyze_btn" Width="150" Height="30" Margin="576,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="analyze_btn_Click" Content="Analyze Data" IsEnabled="False"/>
         <TextBlock Text="Analysis Results" Margin="10,316,591,219" FontSize="18" FontWeight="Bold"/>
 
 
